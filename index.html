@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Añadir meta tag para móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Césped orgánico con Flores meciéndose</title>
     <style>
         body {
@@ -16,18 +16,18 @@
             display: block;
             margin: 0 auto;
             background-color: transparent;
-            width: 100vw;  /* Ajuste para ancho completo de la pantalla */
-            height: 100vh; /* Ajuste para alto completo de la pantalla */
+            width: 90vw;  /* Ajustar el canvas a un 90% del ancho del viewport */
+            height: 90vh; /* Ajustar el canvas a un 90% del alto del viewport */
         }
         button {
-            padding: 10px 20px;
-            font-size: 4vw;  /* Escalar el tamaño del texto para pantallas pequeñas */
-            margin-top: 10px;
+            padding: 8px 15px;
+            font-size: 3.5vw;  /* Tamaño de fuente más pequeño para pantallas móviles */
+            margin-top: 5px;
             position: absolute;
             top: 10px;
             left: 10px;
             z-index: 1;
-            background-color: #4CAF50; /* Verde suave */
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 10px;
@@ -36,19 +36,19 @@
             transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
         }
         button:hover {
-            background-color: #45a049; /* Cambia el color al pasar el mouse */
-            transform: scale(1.05); /* Pequeño zoom al pasar el mouse */
+            background-color: #45a049;
+            transform: scale(1.05);
             box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
         }
         button:active {
-            transform: scale(0.98); /* Efecto de presionado */
+            transform: scale(0.98);
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
     <button onclick="generateScene()">Presiona aquí Chisikistrukis</button>
-    <canvas id="canvas"></canvas> <!-- El canvas ahora se ajusta automáticamente al tamaño del viewport -->
+    <canvas id="canvas"></canvas>
     <!-- Añadir el elemento de audio -->
     <audio id="backgroundMusic" src="Flores.mp3" loop></audio>
 
@@ -61,8 +61,8 @@
 
         // Ajustar el tamaño del canvas al tamaño de la ventana del navegador
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth * 0.9;  // Reducir el ancho del canvas al 90% del viewport
+            canvas.height = window.innerHeight * 0.9;  // Reducir la altura del canvas al 90% del viewport
         }
 
         window.addEventListener('resize', resizeCanvas); // Ajustar el tamaño cuando se cambie el tamaño de la ventana
@@ -84,38 +84,38 @@
         function generateGrass() {
             // Generar briznas de césped orgánico con curvas más anchas en la base
             for (var i = 0; i < canvas.width; i += 8) {
-                var height = Math.random() * 70 + 50; // Altura aleatoria de cada brizna
-                var controlPointOffset = Math.random() * 30 - 15; // Variación en el control de la curva
+                var height = Math.random() * 70 + 50;
+                var controlPointOffset = Math.random() * 30 - 15;
                 grassBlades.push({
                     x: i,
                     height: height,
                     controlOffset: controlPointOffset,
-                    width: Math.random() * 8 + 5 // Ancho variable en la base del césped
+                    width: Math.random() * 8 + 5
                 });
             }
         }
 
         function drawGrass() {
-            ctx.fillStyle = '#006400'; // Color verde oscuro para el césped
+            ctx.fillStyle = '#006400';
             grassBlades.forEach(function(blade, index) {
                 ctx.beginPath();
-                ctx.moveTo(blade.x - blade.width / 2, canvas.height); // Base ancha
-                var sway = Math.sin((Date.now() / 500) + (index / 5)) * 10; // Balanceo
+                ctx.moveTo(blade.x - blade.width / 2, canvas.height);
+                var sway = Math.sin((Date.now() / 500) + (index / 5)) * 10;
                 ctx.quadraticCurveTo(blade.x + blade.controlOffset + sway, canvas.height - blade.height / 2,
                                      blade.x, canvas.height - blade.height);
-                ctx.lineTo(blade.x + blade.width / 2, canvas.height); // Lado derecho de la base
-                ctx.fill(); // Rellenar el césped
+                ctx.lineTo(blade.x + blade.width / 2, canvas.height);
+                ctx.fill();
             });
         }
 
         function generateFlowers() {
-            // Generar un número aleatorio de flores entre 20 y 30
-            var flowerCount = Math.floor(Math.random() * 10) + 30;
+            // Disminuir la cantidad de flores generadas entre 15 y 25
+            var flowerCount = Math.floor(Math.random() * 10) + 15;
             for (var i = 0; i < flowerCount; i++) {
                 var flower = {
                     x: Math.random() * canvas.width,
-                    y: canvas.height - Math.random() * 100 - 200, // Aumentar la altura del tallo
-                    scale: Math.random() * 0.3 + 0.4,
+                    y: canvas.height - Math.random() * 100 - 200,
+                    scale: Math.random() * 0.2 + 0.3,  // Hacer las flores un poco más pequeñas
                     petalCount: 8,
                     petalLength: 50,
                     currentPetal: 0,
@@ -132,11 +132,11 @@
                 var petalCount = flower.petalCount;
                 var petalLength = flower.petalLength * flower.scale;
 
-                // Dibujar tallo (con color verde más claro y altura mayor)
+                // Dibujar tallo
                 ctx.beginPath();
-                ctx.moveTo(centerX, canvas.height - 0); // Ajustar para que el tallo inicie desde el césped
+                ctx.moveTo(centerX, canvas.height - 0);
                 ctx.lineTo(centerX, centerY);
-                ctx.strokeStyle = '#32CD32'; // Verde claro para el tallo
+                ctx.strokeStyle = '#32CD32';
                 ctx.lineWidth = 4 * flower.scale;
                 ctx.stroke();
 
@@ -145,23 +145,19 @@
                 ctx.translate(centerX, centerY);
 
                 // Balanceo y mecerse con el viento
-                var sway = Math.sin((Date.now() / 500) + (index / 5)) * 5; // Balanceo de la flor
-                var windSway = Math.sin(Date.now() / 3000) * 15; // Mecerse con el viento de manera más lenta
-
-                // Movimiento lateral más lento
-                var lateralSway = Math.sin(Date.now() / 7000) * 10; // Movimiento lateral lento
+                var sway = Math.sin((Date.now() / 500) + (index / 5)) * 5;
+                var windSway = Math.sin(Date.now() / 3000) * 15;
+                var lateralSway = Math.sin(Date.now() / 7000) * 10;
 
                 // Aplicar los tres efectos de rotación y movimiento lateral
                 ctx.rotate((sway + windSway) * Math.PI / 180);
-                ctx.translate(lateralSway, 0); // Movimiento de lado a lado lento
+                ctx.translate(lateralSway, 0);
 
                 // Dibujar pétalos
                 for (var i = 0; i < petalCount; i++) {
                     var angle = ((i * 2 * Math.PI) / petalCount) + flower.angleOffset;
-
                     ctx.save();
                     ctx.rotate(angle);
-
                     ctx.beginPath();
                     ctx.moveTo(0, 0);
                     ctx.bezierCurveTo(
@@ -195,8 +191,8 @@
         function swayGrassAndFlowers() {
             function sway() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawGrass(); // Dibujar césped primero
-                drawFlowers(); // Dibujar las flores después
+                drawGrass();
+                drawFlowers();
                 requestAnimationFrame(sway);
             }
             sway();
