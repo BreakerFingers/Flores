@@ -46,6 +46,8 @@
 <body>
     <button onclick="generateScene()">Presiona aquí Chisikistrukis</button>
     <canvas id="canvas" width="800" height="600"></canvas>
+    <!-- Añadir el elemento de audio -->
+    <audio id="backgroundMusic" src="Flores.mp3" loop></audio>
 
     <script>
         var canvas = document.getElementById('canvas');
@@ -55,6 +57,10 @@
         var swayAngle = 0;
 
         function generateScene() {
+            // Iniciar la música de fondo cuando se genera la escena
+            var music = document.getElementById('backgroundMusic');
+            music.play();
+
             grassBlades = [];
             flowers = [];
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -96,7 +102,7 @@
             for (var i = 0; i < flowerCount; i++) {
                 var flower = {
                     x: Math.random() * canvas.width,
-                    y: canvas.height - Math.random() * 199 - 200, // Aumentar la altura del tallo
+                    y: canvas.height - Math.random() * 100 - 200, // Aumentar la altura del tallo
                     scale: Math.random() * 0.3 + 0.4,
                     petalCount: 8,
                     petalLength: 50,
@@ -181,4 +187,5 @@
     </script>
 </body>
 </html>
+
 
