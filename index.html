@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Césped orgánico con Flores meciéndose</title>
+    <style>
+        body {
+            text-align: center;
+            background: linear-gradient(to top, #87CEFA, #ffffff);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: transparent;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin-top: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+            background-color: #4CAF50; /* Verde suave */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+        button:hover {
+            background-color: #45a049; /* Cambia el color al pasar el mouse */
+            transform: scale(1.05); /* Pequeño zoom al pasar el mouse */
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+        }
+        button:active {
+            transform: scale(0.98); /* Efecto de presionado */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <button onclick="generateScene()">Presiona aquí Chisikistrukis</button>
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var grassBlades = [];
+        var flowers = [];
+        var swayAngle = 0;
+
+        function generateScene() {
+            grassBlades = [];
+            flowers = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            generateGrass();
+            generateFlowers();
+            swayGrassAndFlowers();
+        }
+
+        function generateGrass() {
+            // Generar briznas de césped orgánico con curvas más anchas en la base
+            for (var i = 0; i < canvas.width; i += 8) {
+                var height = Math.random() * 70 + 50; // Altura aleatoria de cada brizna
+                var controlPointOffset = Math.random() * 30 - 15; // Variación en el control de la curva
+                grassBlades.push({
+                    x: i,
+                    height: height,
+                    controlOffset: controlPointOffset,
+                    width: Math.random() * 8 + 5 // Ancho variable en la base del césped
+                });
+            }
+        }
+
+        function drawGrass() {
+            ctx.fillStyle = '#006400'; // Color verde oscuro para el césped
+            grassBlades.forEach(function(blade, index) {
+                ctx.beginPath();
+                ctx.moveTo(blade.x - blade.width / 2, canvas.height); // Base ancha
+                var sway = Math.sin((Date.now() / 500) + (index / 5)) * 10; // Balanceo
+                ctx.quadraticCurveTo(blade.x + blade.controlOffset + sway, canvas.height - blade.height / 2,
+                                     blade.x, canvas.height - blade.height);
+                ctx.lineTo(blade.x + blade.width / 2, canvas.height); // Lado derecho de la base
+                ctx.fill(); // Rellenar el césped
+            });
+        }
+
+        function generateFlowers() {
+            // Generar un número aleatorio de flores entre 20 y 30
+            var flowerCount = Math.floor(Math.random() * 30) + 50;
+            for (var i = 0; i < flowerCount; i++) {
+                var flower = {
+                    x: Math.random() * canvas.width,
+                    y: canvas.height - Math.random() * 199 - 200, // Aumentar la altura del tallo
+                    scale: Math.random() * 0.3 + 0.4,
+                    petalCount: 8,
+                    petalLength: 50,
+                    currentPetal: 0,
+                    angleOffset: Math.random() * 360
+                };
+                flowers.push(flower);
+            }
+        }
+
+        function drawFlowers() {
+            flowers.forEach(function(flower, index) {
+                var centerX = flower.x;
+                var centerY = flower.y;
+                var petalCount = flower.petalCount;
+                var petalLength = flower.petalLength * flower.scale;
+
+                // Dibujar tallo (con color verde más claro y altura mayor)
+                ctx.beginPath();
+                ctx.moveTo(centerX, canvas.height - 0); // Ajustar para que el tallo inicie desde el césped
+                ctx.lineTo(centerX, centerY);
+                ctx.strokeStyle = '#32CD32'; // Verde claro para el tallo
+                ctx.lineWidth = 4 * flower.scale;
+                ctx.stroke();
+
+                // Guardar el estado del contexto y aplicar transformaciones
+                ctx.save();
+                ctx.translate(centerX, centerY);
+
+                // Balanceo y mecerse con el viento
+                var sway = Math.sin((Date.now() / 500) + (index / 5)) * 5; // Balanceo de la flor
+                var windSway = Math.sin(Date.now() / 3000) * 15; // Mecerse con el viento de manera más lenta
+                ctx.rotate((sway + windSway) * Math.PI / 180); // Aplicar ambos efectos de rotación
+
+                // Dibujar pétalos
+                for (var i = 0; i < petalCount; i++) {
+                    var angle = ((i * 2 * Math.PI) / petalCount) + flower.angleOffset;
+
+                    ctx.save();
+                    ctx.rotate(angle);
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(
+                        -15 * flower.scale, -petalLength / 2,
+                        -15 * flower.scale, -petalLength,
+                        0, -petalLength
+                    );
+                    ctx.bezierCurveTo(
+                        15 * flower.scale, -petalLength,
+                        15 * flower.scale, -petalLength / 2,
+                        0, 0
+                    );
+                    ctx.fillStyle = 'yellow';
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // Dibujar centro de la flor
+                ctx.beginPath();
+                ctx.arc(0, 0, 10 * flower.scale, 0, 2 * Math.PI);
+                ctx.fillStyle = 'brown';
+                ctx.fill();
+                ctx.stroke();
+
+                // Restaurar el estado del contexto
+                ctx.restore();
+            });
+        }
+
+        function swayGrassAndFlowers() {
+            function sway() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawGrass(); // Dibujar césped primero
+                drawFlowers(); // Dibujar las flores después
+                requestAnimationFrame(sway);
+            }
+            sway();
+        }
+
+    </script>
+</body>
+</html>
+
