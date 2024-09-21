@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Añadir meta tag para móviles -->
     <title>Césped orgánico con Flores meciéndose</title>
     <style>
         body {
@@ -15,14 +16,16 @@
             display: block;
             margin: 0 auto;
             background-color: transparent;
+            width: 100vw;  /* Ajuste para ancho completo de la pantalla */
+            height: 100vh; /* Ajuste para alto completo de la pantalla */
         }
         button {
-            padding: 15px 30px;
-            font-size: 18px;
-            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 4vw;  /* Escalar el tamaño del texto para pantallas pequeñas */
+            margin-top: 10px;
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 10px;
+            left: 10px;
             z-index: 1;
             background-color: #4CAF50; /* Verde suave */
             color: white;
@@ -45,7 +48,7 @@
 </head>
 <body>
     <button onclick="generateScene()">Presiona aquí Chisikistrukis</button>
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <canvas id="canvas"></canvas> <!-- El canvas ahora se ajusta automáticamente al tamaño del viewport -->
     <!-- Añadir el elemento de audio -->
     <audio id="backgroundMusic" src="Flores.mp3" loop></audio>
 
@@ -55,6 +58,15 @@
         var grassBlades = [];
         var flowers = [];
         var swayAngle = 0;
+
+        // Ajustar el tamaño del canvas al tamaño de la ventana del navegador
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas); // Ajustar el tamaño cuando se cambie el tamaño de la ventana
+        resizeCanvas(); // Llamar cuando se carga la página
 
         function generateScene() {
             // Iniciar la música de fondo cuando se genera la escena
@@ -135,7 +147,13 @@
                 // Balanceo y mecerse con el viento
                 var sway = Math.sin((Date.now() / 500) + (index / 5)) * 5; // Balanceo de la flor
                 var windSway = Math.sin(Date.now() / 3000) * 15; // Mecerse con el viento de manera más lenta
-                ctx.rotate((sway + windSway) * Math.PI / 180); // Aplicar ambos efectos de rotación
+
+                // Movimiento lateral más lento
+                var lateralSway = Math.sin(Date.now() / 7000) * 10; // Movimiento lateral lento
+
+                // Aplicar los tres efectos de rotación y movimiento lateral
+                ctx.rotate((sway + windSway) * Math.PI / 180);
+                ctx.translate(lateralSway, 0); // Movimiento de lado a lado lento
 
                 // Dibujar pétalos
                 for (var i = 0; i < petalCount; i++) {
@@ -187,5 +205,3 @@
     </script>
 </body>
 </html>
-
-
